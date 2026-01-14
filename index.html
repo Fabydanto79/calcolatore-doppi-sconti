@@ -1,713 +1,392 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doppi Sconti Abbigliamento</title>
-    <style>
-        :root {
-            --color-primary: #2180B8;
-            --color-primary-hover: #1a66a3;
-            --color-primary-active: #1a5490;
-            --color-success: #32b8c6;
-            --color-error: #c01530;
-            --color-warning: #a84b2f;
-            --color-bg: #fcfcf9;
-            --color-surface: #ffffff;
-            --color-text: #134252;
-            --color-text-secondary: #626c71;
-            --color-border: #5e5240;
-            --radius-base: 8px;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #fcfcf9 0%, #f5f5f5 100%);
-            color: var(--color-text);
-            min-height: 100vh;
-            padding: 12px;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--color-text);
-        }
-
-        .subtitle {
-            color: var(--color-text-secondary);
-            font-size: 14px;
-        }
-
-        .card {
-            background: var(--color-surface);
-            border-radius: var(--radius-base);
-            border: 1px solid rgba(94, 82, 64, 0.15);
-            padding: 28px;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: var(--color-text);
-        }
-
-        input[type="number"] {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-base);
-            font-size: 16px;
-            background: var(--color-surface);
-            color: var(--color-text);
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        input[type="number"]:focus {
-            outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(33, 128, 141, 0.15);
-        }
-
-        input[type="number"]::placeholder {
-            color: var(--color-text-secondary);
-        }
-
-        .discount-section {
-            margin-bottom: 28px;
-        }
-
-        .section-title {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 12px;
-            color: var(--color-text);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .discount-btn {
-            padding: 14px 16px;
-            border: 2px solid rgba(33, 128, 141, 0.3);
-            background: rgba(33, 128, 141, 0.08);
-            color: var(--color-text);
-            border-radius: var(--radius-base);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .discount-btn:hover {
-            background: rgba(33, 128, 141, 0.15);
-            border-color: rgba(33, 128, 141, 0.5);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .discount-btn.active {
-            background: var(--color-primary);
-            color: #ffffff;
-            border-color: var(--color-primary);
-            box-shadow: 0 4px 12px rgba(33, 128, 141, 0.25);
-        }
-
-        .discount-btn.active::after {
-            content: "✓";
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-weight: bold;
-        }
-
-        .reset-btn {
-            width: 100%;
-            padding: 10px 16px;
-            background: rgba(192, 21, 47, 0.1);
-            color: var(--color-error);
-            border: 1px solid var(--color-error);
-            border-radius: var(--radius-base);
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 16px;
-        }
-
-        .reset-btn:hover {
-            background: rgba(192, 21, 47, 0.2);
-        }
-
-        .results-section {
-            background: linear-gradient(135deg, rgba(33, 128, 141, 0.08) 0%, rgba(50, 184, 198, 0.08) 100%);
-            padding: 20px;
-            border-radius: var(--radius-base);
-            border-left: 4px solid var(--color-success);
-        }
-
-        .result-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 14px;
-        }
-
-        .result-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .result-label {
-            color: var(--color-text-secondary);
-            font-weight: 500;
-        }
-
-        .result-value {
-            color: var(--color-text);
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .total-saved {
-            color: var(--color-success);
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .final-price {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            padding-top: 12px;
-            border-top: 1px solid rgba(33, 128, 141, 0.2);
-            margin-top: 12px;
-        }
-
-        .final-price-label {
-            font-weight: 600;
-            color: var(--color-text);
-        }
-
-        .final-price-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--color-success);
-        }
-
-        .discount-info {
-            font-size: 12px;
-            color: var(--color-text-secondary);
-            margin-top: 8px;
-            text-align: center;
-            font-style: italic;
-        }
-
-        .empty-state {
-            text-align: center;
-            color: var(--color-text-secondary);
-            padding: 20px;
-            font-size: 14px;
-        }
-
-        .qr-section {
-            background: linear-gradient(135deg, rgba(50, 184, 198, 0.1) 0%, rgba(33, 128, 141, 0.1) 100%);
-            padding: 24px;
-            border-radius: var(--radius-base);
-            border: 2px dashed var(--color-success);
-            text-align: center;
-            margin-top: 28px;
-        }
-
-        .qr-title {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 12px;
-            color: var(--color-text);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-            max-width: 200px;
-            height: auto;
-            margin: 16px auto;
-            padding: 8px;
-            background: white;
-            border-radius: var(--radius-base);
-        }
-
-        .qr-instructions {
-            font-size: 12px;
-            color: var(--color-text-secondary);
-            margin-bottom: 12px;
-            font-style: italic;
-        }
-
-        .qr-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-
-        .qr-btn {
-            padding: 10px 16px;
-            background: var(--color-success);
-            color: #ffffff;
-            border: none;
-            border-radius: var(--radius-base);
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .qr-btn:hover {
-            background: var(--color-primary);
-            transform: translateY(-2px);
-        }
-
-        .qr-btn:active {
-            transform: translateY(0);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                max-width: 100%;
-            }
-
-            .card {
-                padding: 16px;
-                margin-bottom: 16px;
-            }
-
-            header {
-                margin-bottom: 24px;
-            }
-
-            h1 {
-                font-size: 20px;
-            }
-
-            .subtitle {
-                font-size: 12px;
-            }
-
-            .button-grid {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .discount-btn {
-                padding: 16px 14px;
-                font-size: 16px;
-                min-height: 48px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .discount-btn.active::after {
-                right: 12px;
-            }
-
-            .form-group {
-                margin-bottom: 16px;
-            }
-
-            .discount-section {
-                margin-bottom: 20px;
-            }
-
-            .reset-btn {
-                padding: 12px 14px;
-                font-size: 14px;
-                min-height: 44px;
-            }
-
-            .results-section {
-                padding: 16px;
-            }
-
-            .result-item {
-                margin-bottom: 10px;
-                font-size: 13px;
-            }
-
-            .result-value {
-                font-size: 15px;
-            }
-
-            .final-price {
-                padding-top: 10px;
-                margin-top: 10px;
-            }
-
-            .final-price-label {
-                font-size: 13px;
-            }
-
-            .final-price-value {
-                font-size: 26px;
-            }
-
-            .discount-info {
-                font-size: 11px;
-                margin-top: 6px;
-            }
-
-            .section-title {
-                font-size: 13px;
-                margin-bottom: 10px;
-            }
-
-            label {
-                font-size: 13px;
-                margin-bottom: 6px;
-            }
-
-            input[type="number"] {
-                padding: 12px 12px;
-                font-size: 16px;
-            }
-
-            .qr-section {
-                margin-top: 20px;
-                padding: 16px;
-            }
-
-                max-width: 160px;
-            }
-
-            .qr-title {
-                font-size: 12px;
-                margin-bottom: 10px;
-            }
-
-            .qr-instructions {
-                font-size: 11px;
-                margin-bottom: 10px;
-            }
-
-            .qr-buttons {
-                flex-direction: column;
-                gap: 6px;
-            }
-
-            .qr-btn {
-                padding: 12px 14px;
-                font-size: 12px;
-                min-height: 40px;
-            }
-        }
-    </style>    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    </head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Doppi Sconti</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --text:#eef5ff;
+      --muted:rgba(238,245,255,.72);
+      --border:rgba(255,255,255,.14);
+      --ok:#36d399;
+      --danger:#ff4d6d;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% 10%,rgba(78,161,255,.25),transparent 60%),
+        radial-gradient(900px 600px at 90% 20%,rgba(40,215,198,.20),transparent 55%),
+        radial-gradient(900px 700px at 50% 110%,rgba(255,77,109,.12),transparent 55%),
+        var(--bg);
+      min-height:100dvh;
+      padding:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .app{
+      width:min(560px,100%);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.05));
+    }
+
+    header{
+      padding:14px 14px 10px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      justify-content:space-between;
+      border-bottom:1px solid var(--border);
+      background:rgba(0,0,0,.12);
+    }
+    .title{line-height:1.05}
+    .title h1{margin:0;font-size:20px;letter-spacing:.2px}
+    .title p{margin:6px 0 0;font-size:13px;color:var(--muted)}
+    .pill{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid var(--border);
+      padding:6px 10px;
+      border-radius:999px;
+      white-space:nowrap;
+      background:rgba(255,255,255,.06);
+    }
+
+    main{
+      padding:12px 14px 14px;
+      display:grid;
+      gap:10px;
+    }
+
+    .row{display:grid;gap:8px}
+
+    label{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:800;
+      letter-spacing:.2px;
+      text-transform:uppercase;
+    }
+
+    input[type="number"]{
+      width:100%;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      padding:12px 14px;
+      font-size:18px;
+      outline:none;
+    }
+    input::placeholder{color:rgba(238,245,255,.45)}
+    input:focus{
+      border-color:rgba(78,161,255,.65);
+      box-shadow:0 0 0 4px rgba(78,161,255,.18);
+    }
+
+    .sections{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    @media(max-width:420px){
+      .sections{grid-template-columns:1fr}
+    }
+
+    .panel{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:10px;
+    }
+    .panel h2{
+      margin:0 0 8px;
+      font-size:13px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.7px;
+      font-weight:800;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+
+    button{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      border-radius:14px;
+      padding:14px 10px;
+      font-size:18px;
+      font-weight:900;
+      min-height:54px;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+      transition:transform .08s ease,background .15s ease,border-color .15s ease;
+    }
+    button:active{transform:scale(.98)}
+
+    .btn-discount.active{
+      background:linear-gradient(135deg,rgba(78,161,255,.35),rgba(40,215,198,.22));
+      border-color:rgba(78,161,255,.6);
+      position:relative;
+    }
+    .btn-discount.active::after{
+      content:"✓";
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:16px;
+      opacity:.95;
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+    .btn-clear{
+      background:rgba(255,77,109,.12);
+      border-color:rgba(255,77,109,.45);
+    }
+
+    .results{
+      border:1px solid var(--border);
+      background:linear-gradient(135deg,rgba(78,161,255,.12),rgba(40,215,198,.10));
+      border-radius:16px;
+      padding:10px 12px;
+      display:grid;
+      gap:6px;
+    }
+    .line{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .line strong{
+      color:var(--text);
+      font-size:14px;
+      font-weight:900;
+    }
+    .big{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      padding-top:8px;
+      margin-top:4px;
+      border-top:1px solid rgba(255,255,255,.12);
+    }
+    .big .label{font-size:14px;font-weight:900}
+    .big .value{font-size:26px;font-weight:900;color:var(--ok)}
+    .hint{font-size:12px;color:rgba(238,245,255,.7);text-align:center;margin-top:2px}
+
+    @media(max-height:740px){
+      header{padding:12px 14px 8px}
+      .title h1{font-size:19px}
+      main{gap:8px}
+      button{min-height:52px}
+      .big .value{font-size:24px}
+    }
+  </style>
+</head>
+
 <body>
-    <div class="container">
-        <header>
-            <h1>🛍️ Doppi Sconti</h1>
-            <p class="subtitle">Calcola gli sconti per il tuo negozio di abbigliamento</p>
-        </header>
+  <div class="app" role="application" aria-label="Calcolatore doppi sconti">
+    <header>
+      <div class="title">
+        <h1>Doppi Sconti</h1>
+        <p>Inserisci prezzo e seleziona 1 o 2 sconti.</p>
+      </div>
+      <div class="pill" id="statusPill">Pronto</div>
+    </header>
 
-        <div class="card">
-            <div class="form-group">
-                <label for="price">Prezzo di Cartellino (€)</label>
-                <input 
-                    type="number" 
-                    id="price" 
-                    placeholder="Inserisci il prezzo originale"
-                    min="0"
-                    step="0.01"
-                    onInput="calculateDiscount()"
-                >
-            </div>
+    <main>
+      <section class="row">
+        <label for="price">Prezzo di cartellino (€)</label>
+        <input id="price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Es. 79.90" />
+      </section>
 
-            <div class="discount-section">
-                <p class="section-title">🏷️ Primo Sconto</p>
-                <div class="button-grid">
-                    <button class="discount-btn" data-discount="50" onclick="selectFirstDiscount(50)">50%</button>
-                    <button class="discount-btn" data-discount="30" onclick="selectFirstDiscount(30)">30%</button>
-                    <button class="discount-btn" data-discount="20" onclick="selectFirstDiscount(20)">20%</button>
-                    <button class="discount-btn" data-discount="15" onclick="selectFirstDiscount(15)">15%</button>
-                </div>
-            </div>
-
-            <div class="discount-section">
-                <p class="section-title">🏷️ Secondo Sconto (Facoltativo)</p>
-                <div class="button-grid">
-                    <button class="discount-btn" data-discount="50" onclick="selectSecondDiscount(50)">50%</button>
-                    <button class="discount-btn" data-discount="30" onclick="selectSecondDiscount(30)">30%</button>
-                    <button class="discount-btn" data-discount="20" onclick="selectSecondDiscount(20)">20%</button>
-                    <button class="discount-btn" data-discount="15" onclick="selectSecondDiscount(15)">15%</button>
-                </div>
-            </div>
-
-            <button class="reset-btn" onclick="resetAll()">Azzera Tutto</button>
-
-            <div id="results" style="display: none;">
-                <div class="results-section">
-                    <div class="result-item">
-                        <span class="result-label">Prezzo Originale</span>
-                        <span class="result-value" id="originalPrice">€0.00</span>
-                    </div>
-
-                    <div id="firstDiscountDisplay" class="result-item" style="display: none;">
-                        <span class="result-label" id="firstDiscountLabel"></span>
-                        <span class="result-value total-saved" id="firstDiscountAmount"></span>
-                    </div>
-
-                    <div id="secondDiscountDisplay" class="result-item" style="display: none;">
-                        <span class="result-label" id="secondDiscountLabel"></span>
-                        <span class="result-value total-saved" id="secondDiscountAmount"></span>
-                    </div>
-
-                    <div id="totalSavedDisplay" class="result-item" style="display: none;">
-                        <span class="result-label"><strong>Sconto Totale</strong></span>
-                        <span class="result-value total-saved" id="totalSaved"></span>
-                    </div>
-
-                    <div class="final-price">
-                        <span class="final-price-label">Prezzo Finale</span>
-                        <span class="final-price-value" id="finalPrice">€0.00</span>
-                    </div>
-
-                    <div id="discountInfo" class="discount-info"></div>
-                </div>
-            </div>
-
-            <div id="emptyState" class="empty-state">
-                ↑ Inserisci il prezzo e seleziona uno sconto per iniziare
-            </div>
-
-            <div class="qr-section">
-                <p class="qr-title">📱 Condividi con i Clienti</p>
-                <p class="qr-instructions">Stampa questo QR code nel tuo negozio affinché i clienti possano accedere alla webapp</p>
-                <canvas id="qrCanvas"></canvas>
-                <div class="qr-buttons">
-                    <button class="qr-btn" onclick="printQRCode()">🖨️ Stampa QR Code</button>
-                    <button class="qr-btn" onclick="downloadQRCode()">⬇️ Scarica QR Code</button>
-                </div>
-            </div>
+      <section class="sections" aria-label="Selezione sconti">
+        <div class="panel">
+          <h2>Primo sconto</h2>
+          <div class="grid">
+            <button class="btn-discount" data-group="first" data-discount="50">50%</button>
+            <button class="btn-discount" data-group="first" data-discount="30">30%</button>
+            <button class="btn-discount" data-group="first" data-discount="20">20%</button>
+            <button class="btn-discount" data-group="first" data-discount="15">15%</button>
+          </div>
         </div>
-    </div>
 
-    <script>
-        let selectedFirstDiscount = null;
-        let selectedSecondDiscount = null;
+        <div class="panel">
+          <h2>Secondo sconto</h2>
+          <div class="grid">
+            <button class="btn-discount" data-group="second" data-discount="50">50%</button>
+            <button class="btn-discount" data-group="second" data-discount="30">30%</button>
+            <button class="btn-discount" data-group="second" data-discount="20">20%</button>
+            <button class="btn-discount" data-group="second" data-discount="15">15%</button>
+          </div>
+        </div>
+      </section>
 
-        function selectFirstDiscount(percentage) {
-            const buttons = document.querySelectorAll('.discount-section:nth-child(2) .discount-btn');
-            
-            if (selectedFirstDiscount === percentage) {
-                selectedFirstDiscount = null;
-            } else {
-                selectedFirstDiscount = percentage;
-            }
+      <section class="actions">
+        <button class="btn-clear" id="btnReset" type="button">Azzera</button>
+      </section>
 
-            // Update button states
-            buttons.forEach(btn => {
-                if (parseInt(btn.dataset.discount) === selectedFirstDiscount) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
+      <section class="results" aria-label="Risultati">
+        <div class="line"><span>Originale</span><strong id="rOriginal">€0,00</strong></div>
+        <div class="line"><span id="rD1Label">Sconto 1</span><strong id="rD1">—</strong></div>
+        <div class="line"><span id="rD2Label">Sconto 2</span><strong id="rD2">—</strong></div>
+        <div class="line"><span>Risparmio totale</span><strong id="rSaved">—</strong></div>
+        <div class="big">
+          <div class="label">Prezzo finale</div>
+          <div class="value" id="rFinal">€0,00</div>
+        </div>
+        <div class="hint" id="rInfo">Seleziona almeno il primo sconto.</div>
+      </section>
+    </main>
+  </div>
 
-            calculateDiscount();
-        }
+  <script>
+    var state = { first: null, second: null };
+    function el(id){ return document.getElementById(id); }
 
-        function selectSecondDiscount(percentage) {
-            const buttons = document.querySelectorAll('.discount-section:nth-child(3) .discount-btn');
-            
-            if (selectedSecondDiscount === percentage) {
-                selectedSecondDiscount = null;
-            } else {
-                selectedSecondDiscount = percentage;
-            }
+    var priceInput = el("price");
+    var statusPill = el("statusPill");
 
-            // Update button states
-            buttons.forEach(btn => {
-                if (parseInt(btn.dataset.discount) === selectedSecondDiscount) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
+    var rOriginal = el("rOriginal");
+    var rD1Label = el("rD1Label");
+    var rD1 = el("rD1");
+    var rD2Label = el("rD2Label");
+    var rD2 = el("rD2");
+    var rSaved = el("rSaved");
+    var rFinal = el("rFinal");
+    var rInfo = el("rInfo");
 
-            calculateDiscount();
-        }
+    var btnReset = el("btnReset");
 
-        function calculateDiscount() {
-            const priceInput = document.getElementById('price');
-            const price = parseFloat(priceInput.value);
+    function eur(n){
+      var v = (typeof n === "number" && isFinite(n)) ? n : 0;
+      return v.toLocaleString("it-IT", { style: "currency", currency: "EUR" });
+    }
 
-            if (!price || price <= 0 || !selectedFirstDiscount) {
-                document.getElementById('results').style.display = 'none';
-                document.getElementById('emptyState').style.display = 'block';
-                return;
-            }
+    function setActive(group, discount){
+      var buttons = document.querySelectorAll('.btn-discount[data-group="' + group + '"]');
+      for (var i=0; i<buttons.length; i++){
+        var b = buttons[i];
+        b.classList.toggle("active", Number(b.getAttribute("data-discount")) === discount);
+      }
+    }
 
-            document.getElementById('emptyState').style.display = 'none';
-            document.getElementById('results').style.display = 'block';
+    function toggleDiscount(group, discount){
+      state[group] = (state[group] === discount) ? null : discount;
+      setActive(group, state[group]);
+      calculate();
+    }
 
-            // Calculate first discount
-            const firstDiscountAmount = (price * selectedFirstDiscount) / 100;
-            const priceAfterFirstDiscount = price - firstDiscountAmount;
+    function calculate(){
+      var raw = String(priceInput.value || "").replace(",", ".");
+      var price = parseFloat(raw);
 
-            // Calculate second discount (if selected)
-            let secondDiscountAmount = 0;
-            let finalPrice = priceAfterFirstDiscount;
-            let totalDiscountPercent = selectedFirstDiscount;
+      rOriginal.textContent = eur(price);
 
-            if (selectedSecondDiscount) {
-                secondDiscountAmount = (priceAfterFirstDiscount * selectedSecondDiscount) / 100;
-                finalPrice = priceAfterFirstDiscount - secondDiscountAmount;
-                
-                // Calculate effective total discount percentage
-                totalDiscountPercent = ((price - finalPrice) / price * 100).toFixed(2);
-            }
+      if (!price || price <= 0){
+        statusPill.textContent = "Inserisci prezzo";
+        rD1Label.textContent = "Sconto 1";
+        rD1.textContent = "—";
+        rD2Label.textContent = "Sconto 2";
+        rD2.textContent = "—";
+        rSaved.textContent = "—";
+        rFinal.textContent = eur(0);
+        rInfo.textContent = "Inserisci un prezzo valido.";
+        return;
+      }
 
-            const totalSavedAmount = price - finalPrice;
+      if (!state.first){
+        statusPill.textContent = "Seleziona 1° sconto";
+        rD1Label.textContent = "Sconto 1";
+        rD1.textContent = "—";
+        rD2Label.textContent = "Sconto 2";
+        rD2.textContent = "—";
+        rSaved.textContent = "—";
+        rFinal.textContent = eur(price);
+        rInfo.textContent = "Seleziona almeno il primo sconto.";
+        return;
+      }
 
-            // Update display
-            document.getElementById('originalPrice').textContent = '€' + price.toFixed(2);
-            document.getElementById('finalPrice').textContent = '€' + finalPrice.toFixed(2);
-            document.getElementById('totalSaved').textContent = '-€' + totalSavedAmount.toFixed(2);
+      var cut1 = price * (state.first / 100);
+      var after1 = price - cut1;
 
-            // First discount display
-            document.getElementById('firstDiscountLabel').textContent = `Sconto ${selectedFirstDiscount}%`;
-            document.getElementById('firstDiscountAmount').textContent = '-€' + firstDiscountAmount.toFixed(2);
-            document.getElementById('firstDiscountDisplay').style.display = 'flex';
+      var cut2 = 0;
+      var final = after1;
 
-            // Second discount display
-            if (selectedSecondDiscount) {
-                document.getElementById('secondDiscountLabel').textContent = `Sconto ${selectedSecondDiscount}% sul prezzo scontato`;
-                document.getElementById('secondDiscountAmount').textContent = '-€' + secondDiscountAmount.toFixed(2);
-                document.getElementById('secondDiscountDisplay').style.display = 'flex';
-                document.getElementById('totalSavedDisplay').style.display = 'flex';
-                document.getElementById('discountInfo').textContent = `Sconto effettivo totale: ${totalDiscountPercent}%`;
-            } else {
-                document.getElementById('secondDiscountDisplay').style.display = 'none';
-                document.getElementById('totalSavedDisplay').style.display = 'none';
-                document.getElementById('discountInfo').textContent = '';
-            }
-        }
+      if (state.second){
+        cut2 = after1 * (state.second / 100);
+        final = after1 - cut2;
+      }
 
-        function resetAll() {
-            selectedFirstDiscount = null;
-            selectedSecondDiscount = null;
+      var saved = price - final;
+      var eff = (saved / price) * 100;
 
-            document.getElementById('price').value = '';
-            document.querySelectorAll('.discount-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+      statusPill.textContent = "Calcolato";
+      rD1Label.textContent = "Sconto 1 (" + state.first + "%)";
+      rD1.textContent = "− " + eur(cut1);
 
-            document.getElementById('results').style.display = 'none';
-            document.getElementById('emptyState').style.display = 'block';
-        }
+      if (state.second){
+        rD2Label.textContent = "Sconto 2 (" + state.second + "%) su scontato";
+        rD2.textContent = "− " + eur(cut2);
+        rInfo.textContent = "Sconto effettivo totale: " + eff.toFixed(2) + "%";
+      } else {
+        rD2Label.textContent = "Sconto 2 (facoltativo)";
+        rD2.textContent = "—";
+        rInfo.textContent = "Secondo sconto non applicato.";
+      }
 
-        // Allow Enter key to trigger calculation
-        document.getElementById('price').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                calculateDiscount();
-            }
+      rSaved.textContent = "− " + eur(saved);
+      rFinal.textContent = eur(final);
+    }
+
+    // Eventi bottoni sconto
+    var discountButtons = document.querySelectorAll(".btn-discount");
+    for (var i=0; i<discountButtons.length; i++){
+      (function(btn){
+        btn.addEventListener("click", function(){
+          toggleDiscount(btn.getAttribute("data-group"), Number(btn.getAttribute("data-discount")));
         });
+      })(discountButtons[i]);
+    }
 
-        // QR Code generation
-        function generateQRCode() {
-            const qrCanvas = document.getElementById('qrCanvas');
-            
-            // Clear previous QR code
-            qrCanvas.innerHTML = '';
-            
-            // Get the current page URL
-            const pageUrl = window.location.href;
-            
-            // Generate QR code
-            new QRCode(qrCanvas, {
-                text: pageUrl,
-                width: 200,
-                height: 200,
-                correctLevel: QRCode.CorrectLevel.H,
-                colorDark: '#134252',
-                colorLight: '#ffffff'
-            });
-        }
+    priceInput.addEventListener("input", calculate);
 
-        function printQRCode() {
-            const canvas = document.getElementById('qrCanvas').querySelector('canvas');
-            if (!canvas) {
-                alert('Genera il QR code prima di stampare');
-                return;
-            }
-            
-            const printWindow = window.open();
-            const img = canvas.toDataURL('image/png');
-            
-            printWindow.document.write('<html><head><title>QR Code - Doppi Sconti</title></head><body>');
-            printWindow.document.write('<div style="text-align: center; padding: 20px;">');
-            printWindow.document.write('<h1>🛍️ Doppi Sconti Abbigliamento</h1>');
-            printWindow.document.write('<p>Scansiona il QR code per utilizzare la webapp</p>');
-            printWindow.document.write('<img src="' + img + '" style="width: 400px; margin: 20px 0;">');
-            printWindow.document.write('<p style="font-size: 14px; margin-top: 40px;">Calcola i tuoi sconti in tempo reale!</p>');
-            printWindow.document.write('</div></body></html>');
-            printWindow.document.close();
-            printWindow.print();
-        }
+    btnReset.addEventListener("click", function(){
+      state.first = null;
+      state.second = null;
+      priceInput.value = "";
+      setActive("first", null);
+      setActive("second", null);
+      calculate();
+    });
 
-        function downloadQRCode() {
-            const canvas = document.getElementById('qrCanvas').querySelector('canvas');
-            if (!canvas) {
-                alert('Genera il QR code prima di scaricare');
-                return;
-            }
-            
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL('image/png');
-            link.download = 'doppi-sconti-qrcode.png';
-            link.click();
-        }
-
-        // Generate QR code when page loads
-        window.addEventListener('load', function() {
-            generateQRCode();
-        });
-    </script>
+    calculate();
+  </script>
 </body>
 </html>
